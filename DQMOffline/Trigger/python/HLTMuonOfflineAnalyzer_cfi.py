@@ -9,53 +9,53 @@ hltMuonOfflineAnalyzer = cms.EDAnalyzer("HLTMuonOfflineAnalyzer",
     destination = cms.untracked.string("HLT/Muon/Distributions/globalMuons"),
 
     ## HLT paths passing any one of these regular expressions will be included
+
     hltPathsToCheck = cms.vstring(
-      "HLT_Mu45_eta2p1_v1",
-      "HLT_Mu50_v",
-      "HLT_IsoMu24_v",
-      "HLT_IsoTkMu24_v",
-      "HLT_Mu17_Mu8_DZ_v",
-      "HLT_Mu17_TkMu8_DZ_v",
-      "HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_v",
-      "HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_v",
-      "HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_v",
-      "HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_v",
-      "HLT_IsoMu20_eta2p1_v",
-      "HLT_IsoTkMu20_eta2p1_v",
-      "HLT_IsoMu24_eta2p1_v",
-      "HLT_IsoTkMu24_eta2p1_v",
-      "HLT_Mu24_eta2p1_v",
-      "HLT_TkMu24_v",
-      "HLT_IsoMu27_v",
-      "HLT_IsoTkMu27_v",
-      "HLT_Mu27_v",
-      "HLT_TkMu27_v",
-      "HLT_IsoMu20_v",
-      "HLT_Mu20_v",
-      "HLT_TkMu20_v",
-      "HLT_IsoTkMu20_v",
-      "HLT_IsoMu22_v",
-      "HLT_IsoTkMu22_v",
-      "HLT_IsoMu22_eta2p1_v",
-      "HLT_IsoTkMu22_eta2p1_v",
-      "HLT_IsoMu18_v",
-      "HLT_IsoTkMu18_v",
-      "HLT_L1SingleMu18_v",
-      "HLT_L2Mu10_v",
-      "HLT_HIL1DoubleMu0", #for HI
-      "HLT_HIL1DoubleMu0BPTX", #for HI
-      "HLT_HIL2Mu3", #for HI
-      "HLT_HIL2Mu3BPTX", #for HI
-      "HLT_HIL2Mu7", #for HI
-      "HLT_HIL2Mu15", #for HI
-      "HLT_HIL2Mu3_NHitQ", #for HI
-      "HLT_HIL2DoubleMu0", #for HI
-      "HLT_HIL2DoubleMu0BPTX", #for HI
-      "HLT_HIL2DoubleMu0_NHitQ", #for HI
-      "HLT_HIL2DoubleMu3", #for HI
-      "HLT_HIL3Mu3", #for HI
-      "HLT_HIL3Mu3BPTX", #for HI
-      "HLT_HIL3DoubleMuOpen" #for HI
+      "HLT_PAL1DoubleMu0_MassGT1_v1", #for HI
+      "HLT_PAL1DoubleMuOpen_MassGT1_v1", #for HI
+      "HLT_PAL1DoubleMuOpen_OS_v1", #for HI
+      "HLT_PAL1DoubleMuOpen_SS_v1", #for HI
+      "HLT_PAL1DoubleMuOpen_v1", #for HI
+      "HLT_PAL1DoubleMu0_v1", #for HI
+      "HLT_PAL1DoubleMu0_QGTE8_v1", #for HI 
+      "HLT_PAL1DoubleMu0_QGTE9_v1", #for HI 
+      "HLT_PAL1DoubleMu0_QGTE10_v1", #for HI
+      "HLT_PAL1DoubleMu0_QGTE11_v1", #for HI
+      "HLT_PAL1DoubleMu0_QGTE12_v1", #for HI
+      "HLT_PAL1DoubleMu0_QGTE13_v1", #for HI
+      "HLT_PAL1DoubleMu0_QGTE14_v1", #for HI
+      "HLT_PAL1DoubleMu0_QGTE15_v1", #for HI
+      "HLT_PAL1DoubleMu10_v1", #for HI
+      "HLT_PAL1DoubleMu10_Mass60to150_v1", #for HI
+      "HLT_PAL2DoubleMuOpen_v1", #for HI
+      "HLT_PAL2DoubleMu10_v1", #for HI
+      "HLT_PAL2DoubleMu10_Mass60to150_v1", #for HI
+      "HLT_PAL3DoubleMuOpen_v1", #for HI
+      "HLT_PAL3DoubleMuOpen_HIon_v1", #for HI
+      "HLT_PAL3DoubleMu10_v1", #for HI
+      "HLT_PAL3DoubleMu10_Mass60to150_v1", #for HI
+      "HLT_PAL3DoubleMu10_HIon_v1", #for HI
+      "HLT_PAL3DoubleMu10_Mass60to150_HIon_v1", #for HI
+      "HLT_PA2013L2DoubleMu3_v1", #for HI
+      "HLT_PAL1MuOpen_v1", #for HI
+      "HLT_PAL1Mu0_NoBptxAND_v1", #for HI
+      "HLT_PAL1Mu0_v1", #for HI
+      "HLT_PAL1Mu12_NoBptxAND_v1", #for HI
+      "HLT_PAL1Mu12_v1", #for HI
+      "HLT_PAL1Mu15_v1", #for HI
+      "HLT_PAL2Mu0_v1", #for HI 
+      "HLT_PAL2Mu12_v1", #for HI
+      "HLT_PAL2Mu15_v1", #for HI
+      "HLT_PAL3Mu0_v1", #for HI 
+      "HLT_PAL3Mu0_HIon_v1", #for HI
+      "HLT_PAL3Mu3_v1", #for HI 
+      "HLT_PAL3Mu5_v1", #for HI 
+      "HLT_PAL3Mu7_v1", #for HI 
+      "HLT_PAL3Mu12_v1", #for HI
+      "HLT_PAL3Mu15_v1", #for HI
+      "HLT_PA2013Mu3_v1", #for HI
+      "HLT_PA2013Mu7_v1", #for HI
+      "HLT_PA2013Mu12_v1", #for HI
     ),
 
 #HLT_Mu15_eta2p1_TriCentral_40_20_20_BTagIP3D1stTrack_v3 matches HLT_Mu15_eta2p1_v
