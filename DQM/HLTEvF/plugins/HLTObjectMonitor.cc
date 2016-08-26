@@ -72,7 +72,7 @@ using std::unordered_map;
 class HLTObjectMonitor : public DQMEDAnalyzer {
   struct hltPlot
   {
-    
+
     MonitorElement * ME;
     string pathName;
     string pathNameOR;
@@ -86,7 +86,7 @@ class HLTObjectMonitor : public DQMEDAnalyzer {
     double xMin;
     double xMax;
     bool displayInPrimary;
-    
+
   };
 
    public:
@@ -162,6 +162,9 @@ class HLTObjectMonitor : public DQMEDAnalyzer {
   edm::ParameterSet bJetCSVCalo_pset;
   edm::ParameterSet bJetCSVPF_pset;
   edm::ParameterSet diMuonMass_pset;
+  edm::ParameterSet pAL1DoubleMuZMass_pset;
+  edm::ParameterSet pAL2DoubleMuZMass_pset;
+  edm::ParameterSet pAL3DoubleMuZMass_pset;
   edm::ParameterSet diElecMass_pset;
   edm::ParameterSet muonDxy_pset;
   edm::ParameterSet wallTime_pset;
@@ -202,6 +205,9 @@ class HLTObjectMonitor : public DQMEDAnalyzer {
   hltPlot bJetCSVCalo_;
   hltPlot bJetCSVPF_;
   hltPlot diMuonMass_;
+  hltPlot pAL1DoubleMuZMass_;
+  hltPlot pAL2DoubleMuZMass_;
+  hltPlot pAL3DoubleMuZMass_;
   hltPlot diElecMass_;
   hltPlot muonDxy_;
   hltPlot wallTime_;
@@ -296,6 +302,12 @@ HLTObjectMonitor::HLTObjectMonitor(const edm::ParameterSet& iConfig)
   plotMap[&bJetCSVPF_] = &bJetCSVPF_pset;
   diMuonMass_pset = iConfig.getParameter<edm::ParameterSet>("diMuonMass");
   plotMap[&diMuonMass_] = &diMuonMass_pset;
+  pAL1DoubleMuZMass_pset = iConfig.getParameter<edm::ParameterSet>("pAL1DoubleMuZMass");
+  plotMap[&pAL1DoubleMuZMass_] = &pAL1DoubleMuZMass_pset;
+  pAL2DoubleMuZMass_pset = iConfig.getParameter<edm::ParameterSet>("pAL2DoubleMuZMass");
+  plotMap[&pAL2DoubleMuZMass_] = &pAL2DoubleMuZMass_pset;
+  pAL3DoubleMuZMass_pset = iConfig.getParameter<edm::ParameterSet>("pAL3DoubleMuZMass");
+  plotMap[&pAL3DoubleMuZMass_] = &pAL3DoubleMuZMass_pset;
   diElecMass_pset = iConfig.getParameter<edm::ParameterSet>("diElecMass");
   plotMap[&diElecMass_] = &diElecMass_pset;
   muonDxy_pset = iConfig.getParameter<edm::ParameterSet>("muonDxy");
@@ -303,10 +315,10 @@ HLTObjectMonitor::HLTObjectMonitor(const edm::ParameterSet& iConfig)
   jetAK8Pt_pset = iConfig.getParameter<edm::ParameterSet>("jetAK8Pt");
   plotMap[&jetAK8Pt_] = &jetAK8Pt_pset;
   tauPt_pset = iConfig.getParameter<edm::ParameterSet>("tauPt");
-  plotMap[&tauPt_] = &tauPt_pset; 
+  plotMap[&tauPt_] = &tauPt_pset;
   wallTime_pset = iConfig.getParameter<edm::ParameterSet>("wallTime");
   plotMap[&wallTime_] = &wallTime_pset;
-  
+
 
   for (auto item = plotMap.begin(); item != plotMap.end(); item++)
     {
@@ -320,18 +332,18 @@ HLTObjectMonitor::HLTObjectMonitor(const edm::ParameterSet& iConfig)
       (*item->first).displayInPrimary = (*item->second).getParameter<bool>("mainWorkspace");
 
       if ((*item->second).exists("pathName_OR"))
-	{
-	  (*item->first).pathNameOR = (*item->second).getParameter<string>("pathName_OR");
-	}
+  {
+    (*item->first).pathNameOR = (*item->second).getParameter<string>("pathName_OR");
+  }
       if ((*item->second).exists("moduleName_OR"))
-	{
-	  (*item->first).moduleNameOR = (*item->second).getParameter<string>("moduleName_OR");
-	}
+  {
+    (*item->first).moduleNameOR = (*item->second).getParameter<string>("moduleName_OR");
+  }
 
       plotList.push_back(item->first);
     }
   plotMap.clear();
-  
+
   //set Token(s)
   triggerResultsToken_ = consumes<edm::TriggerResults>(edm::InputTag("TriggerResults","", processName_));
   aodTriggerToken_ = consumes<trigger::TriggerEvent>(edm::InputTag("hltTriggerSummaryAOD", "", processName_));
@@ -364,7 +376,6 @@ void
 HLTObjectMonitor::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 {
   double start = get_wall_time();
-
   using namespace edm;
 
    if (debugPrint) std::cout << "Inside analyze(). " << std::endl;
@@ -388,314 +399,392 @@ HLTObjectMonitor::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
        edm::InputTag moduleFilter;
        std::string pathName;
        if(plot->pathIndex > 0 && triggerResults->accept(plot->pathIndex) && hltConfig_.saveTags(plot->moduleName))
-	 {
-	   moduleFilter = edm::InputTag(plot->moduleName,"",processName_);
-	   pathName = plot->pathName;
-	   triggerAccept = true;
-	 }
+   {
+     moduleFilter = edm::InputTag(plot->moduleName,"",processName_);
+     pathName = plot->pathName;
+     triggerAccept = true;
+   }
        else if(plot->pathIndexOR > 0 && triggerResults->accept(plot->pathIndexOR) && hltConfig_.saveTags(plot->moduleNameOR))
-	 {
-	   if (firedMap[plot->pathNameOR]) continue;
-	   moduleFilter = edm::InputTag(plot->moduleNameOR,"",processName_);
-	   pathName = plot->pathNameOR;
-	   triggerAccept = true;
-	 }
+   {
+     if (firedMap[plot->pathNameOR]) continue;
+     moduleFilter = edm::InputTag(plot->moduleNameOR,"",processName_);
+     pathName = plot->pathNameOR;
+     triggerAccept = true;
+   }
 
        if (triggerAccept)
-   	 {
-	   unsigned int moduleFilterIndex = aodTriggerEvent->filterIndex(moduleFilter);
-	   
-	   if (moduleFilterIndex+1 > aodTriggerEvent->sizeFilters()) return;
-	   const Keys &keys = aodTriggerEvent->filterKeys( moduleFilterIndex );
+     {
+     unsigned int moduleFilterIndex = aodTriggerEvent->filterIndex(moduleFilter);
 
-	   ////////////////////////////////
-	   ///
-	   /// single-object plots
-	   ///
-	   ////////////////////////////////
+     if (moduleFilterIndex+1 > aodTriggerEvent->sizeFilters()) return;
+     const Keys &keys = aodTriggerEvent->filterKeys( moduleFilterIndex );
 
-	   //PFHT pt
-	   if (pathName == pfHtPt_.pathName)
-	     {
-	       for (const auto & key : keys) pfHtPt_.ME->Fill(objects[key].pt());
-	     }
-	   
-	   //jet pt
-	   else if (pathName == jetPt_.pathName)
-	     {
-	       for (const auto & key : keys) jetPt_.ME->Fill(objects[key].pt());
-	     }
-	   
-	   //photon pt + eta + phi (all use same path)
-	   else if (pathName == photonPt_.pathName)
-	     {
-	       for (const auto & key : keys)
-		 {
-		   photonPt_.ME->Fill(objects[key].pt());
-		   photonEta_.ME->Fill(objects[key].eta());
-		   photonPhi_.ME->Fill(objects[key].phi());
-		 }
-	     }
+     ////////////////////////////////
+     ///
+     /// single-object plots
+     ///
+     ////////////////////////////////
 
-	   //electron pt + eta + phi (all use same path)
-	   else if (pathName == electronPt_.pathName)
-	     {
-	       for (const auto & key : keys)
-		 {
-		   electronPt_.ME->Fill(objects[key].pt());
-		   electronEta_.ME->Fill(objects[key].eta());
-		   electronPhi_.ME->Fill(objects[key].phi());
-		 }
-	     }
+     //PFHT pt
+     if (pathName == pfHtPt_.pathName)
+       {
+         for (const auto & key : keys) pfHtPt_.ME->Fill(objects[key].pt());
+       }
 
-	   //muon pt + eta + phi (all use same path)
-	   else if (pathName == muonPt_.pathName)
-	     {
-	       for (const auto & key : keys)
-		 {
-		   muonPt_.ME->Fill(objects[key].pt());
-		   muonEta_.ME->Fill(objects[key].eta());
-		   muonPhi_.ME->Fill(objects[key].phi());
-		 }
-	     }
+     //jet pt
+     else if (pathName == jetPt_.pathName)
+       {
+         for (const auto & key : keys) jetPt_.ME->Fill(objects[key].pt());
+       }
 
-	   //l2muon pt
-	   else if (pathName == l2muonPt_.pathName)
-	     {
-	       for (const auto & key : keys)
-		 {
-		   l2muonPt_.ME->Fill(objects[key].pt());
-		   l2muonEta_.ME->Fill(objects[key].eta());
-		   l2muonPhi_.ME->Fill(objects[key].phi());
-		 }
-	     }
+     //photon pt + eta + phi (all use same path)
+     else if (pathName == photonPt_.pathName)
+       {
+         for (const auto & key : keys)
+     {
+       photonPt_.ME->Fill(objects[key].pt());
+       photonEta_.ME->Fill(objects[key].eta());
+       photonPhi_.ME->Fill(objects[key].phi());
+     }
+       }
 
-	   //l2NoBPTXmuon pt
-	   else if (pathName == l2NoBPTXmuonPt_.pathName)
-	     {
-	       for (const auto & key : keys)
-		 {
-		   l2NoBPTXmuonPt_.ME->Fill(objects[key].pt());
-		   l2NoBPTXmuonEta_.ME->Fill(objects[key].eta());
-		   l2NoBPTXmuonPhi_.ME->Fill(objects[key].phi());
-		 }
-	     }
+     //electron pt + eta + phi (all use same path)
+     else if (pathName == electronPt_.pathName)
+       {
+         for (const auto & key : keys)
+     {
+       electronPt_.ME->Fill(objects[key].pt());
+       electronEta_.ME->Fill(objects[key].eta());
+       electronPhi_.ME->Fill(objects[key].phi());
+     }
+       }
 
-	   //Razor
-	   else if (pathName == mr_.pathName)
-	     {
-	       double onlineMR = 0, onlineRsq = 0;
-	       for (const auto & key : keys)
-		 {
-		   if(objects[key].id() == 0){ //the MET object containing MR and Rsq will show up with ID = 0
-		     onlineMR = objects[key].px(); //razor variables stored in dummy reco::MET objects
-		     onlineRsq = objects[key].py();
-		   }
-		   mr_.ME->Fill(onlineMR);
-		   rsq_.ME->Fill(onlineRsq);
-		 }
-	     }
+     //muon pt + eta + phi (all use same path)
+     else if (pathName == muonPt_.pathName)
+       {
+         for (const auto & key : keys)
+     {
+       muonPt_.ME->Fill(objects[key].pt());
+       muonEta_.ME->Fill(objects[key].eta());
+       muonPhi_.ME->Fill(objects[key].phi());
+     }
+       }
 
-	   //alphaT
-	   else if (pathName == alphaT_.pathName)
-	     {
-	       std::vector<ROOT::Math::LorentzVector<ROOT::Math::PtEtaPhiM4D<double>>> alphaT_jets;
-	       for (const auto & key : keys)
-		 {
-		   ROOT::Math::LorentzVector<ROOT::Math::PtEtaPhiM4D<double>> JetLVec(objects[key].pt(),objects[key].eta(),objects[key].phi(),objects[key].mass());
-		   alphaT_jets.push_back(JetLVec);
-		 }
+     //l2muon pt
+     else if (pathName == l2muonPt_.pathName)
+       {
+         for (const auto & key : keys)
+     {
+       l2muonPt_.ME->Fill(objects[key].pt());
+       l2muonEta_.ME->Fill(objects[key].eta());
+       l2muonPhi_.ME->Fill(objects[key].phi());
+     }
+       }
 
-	       float alphaT = AlphaT(alphaT_jets,false).value();
-	       alphaT_.ME->Fill(alphaT);
-	     }
+     //l2NoBPTXmuon pt
+     else if (pathName == l2NoBPTXmuonPt_.pathName)
+       {
+         for (const auto & key : keys)
+     {
+       l2NoBPTXmuonPt_.ME->Fill(objects[key].pt());
+       l2NoBPTXmuonEta_.ME->Fill(objects[key].eta());
+       l2NoBPTXmuonPhi_.ME->Fill(objects[key].phi());
+     }
+       }
 
-	   //tau pt
-	   else if (pathName == tauPt_.pathName)
-	     {
-	       for (const auto & key : keys) tauPt_.ME->Fill(objects[key].pt());
-	     }
+     //Razor
+     else if (pathName == mr_.pathName)
+       {
+         double onlineMR = 0, onlineRsq = 0;
+         for (const auto & key : keys)
+     {
+       if(objects[key].id() == 0){ //the MET object containing MR and Rsq will show up with ID = 0
+         onlineMR = objects[key].px(); //razor variables stored in dummy reco::MET objects
+         onlineRsq = objects[key].py();
+       }
+       mr_.ME->Fill(onlineMR);
+       rsq_.ME->Fill(onlineRsq);
+     }
+       }
 
-	   //caloMET pt+phi
-	   else if (pathName == caloMetPt_.pathName)
-	     {
-	       for (const auto & key : keys)
-		 {
-		   caloMetPt_.ME->Fill(objects[key].pt());
-		   caloMetPhi_.ME->Fill(objects[key].phi());
-		 }
-	     }
+     //alphaT
+     else if (pathName == alphaT_.pathName)
+       {
+         std::vector<ROOT::Math::LorentzVector<ROOT::Math::PtEtaPhiM4D<double>>> alphaT_jets;
+         for (const auto & key : keys)
+     {
+       ROOT::Math::LorentzVector<ROOT::Math::PtEtaPhiM4D<double>> JetLVec(objects[key].pt(),objects[key].eta(),objects[key].phi(),objects[key].mass());
+       alphaT_jets.push_back(JetLVec);
+     }
 
-	   //caloHT pt
-	   else if (pathName == caloHtPt_.pathName)
-	     {
-	       for (const auto & key : keys)
-		 {
-		   if(objects[key].id()==89) caloHtPt_.ME->Fill(objects[key].pt());
-		 }
-	     }
-	   
-	   //jetAK8 pt + mass
-	   else if (pathName == jetAK8Pt_.pathName)
-	     {
-	       for (const auto & key : keys)
-		 {
-		   jetAK8Pt_.ME->Fill(objects[key].pt());
-		   jetAK8Mass_.ME->Fill(objects[key].mass());
-		 }
-	     }
+         float alphaT = AlphaT(alphaT_jets,false).value();
+         alphaT_.ME->Fill(alphaT);
+       }
 
-	   //PFMET pt + phi
-	   else if (pathName == pfMetPt_.pathName)
-	     {
-	       for (const auto & key : keys)
-		 {
-		   pfMetPt_.ME->Fill(objects[key].pt());
-		   pfMetPhi_.ME->Fill(objects[key].phi());
-		 }
-	     }
+     //tau pt
+     else if (pathName == tauPt_.pathName)
+       {
+         for (const auto & key : keys) tauPt_.ME->Fill(objects[key].pt());
+       }
 
-	   // bjet eta + phi
-	   else if (pathName == bJetEta_.pathName || pathName == bJetEta_.pathNameOR)
-	     {
-	       for (const auto & key : keys)
-		 {
-		   bJetEta_.ME->Fill(objects[key].eta());
-		   bJetPhi_.ME->Fill(objects[key].phi());
-		 }
-	     }
+     //caloMET pt+phi
+     else if (pathName == caloMetPt_.pathName)
+       {
+         for (const auto & key : keys)
+     {
+       caloMetPt_.ME->Fill(objects[key].pt());
+       caloMetPhi_.ME->Fill(objects[key].phi());
+     }
+       }
 
-	   //b-tagging CSV information
-	   if (pathName == bJetCSVPF_.pathName)
-	     {
-	       edm::Handle<reco::JetTagCollection> csvPfTags;
-	       iEvent.getByToken(csvPfTagsToken_, csvPfTags);
-	       edm::Handle<vector<reco::PFJet>> csvPfJets;
-	       iEvent.getByToken(csvPfJetsToken_, csvPfJets);
+     //caloHT pt
+     else if (pathName == caloHtPt_.pathName)
+       {
+         for (const auto & key : keys)
+     {
+       if(objects[key].id()==89) caloHtPt_.ME->Fill(objects[key].pt());
+     }
+       }
 
-	       if (csvPfTags.isValid() && csvPfJets.isValid())
-		 {
-		   for (auto iter = csvPfTags->begin(); iter != csvPfTags->end(); iter++) bJetCSVPF_.ME->Fill(iter->second);
-		 }
-	     }
-	   if (pathName == bJetCSVCalo_.pathName)
-	     {
-	       edm::Handle<reco::JetTagCollection> csvCaloTags;
-	       iEvent.getByToken(csvCaloTagsToken_, csvCaloTags);
-	       edm::Handle<vector<reco::CaloJet>> csvCaloJets;
-	       iEvent.getByToken(csvCaloJetsToken_, csvCaloJets);
+     //jetAK8 pt + mass
+     else if (pathName == jetAK8Pt_.pathName)
+       {
+         for (const auto & key : keys)
+     {
+       jetAK8Pt_.ME->Fill(objects[key].pt());
+       jetAK8Mass_.ME->Fill(objects[key].mass());
+     }
+       }
 
-	       if (csvCaloTags.isValid() && csvCaloJets.isValid())
-		 {
-		   for (auto iter = csvCaloTags->begin(); iter != csvCaloTags->end(); iter++) bJetCSVCalo_.ME->Fill(iter->second);
-		 }
-	     }
+     //PFMET pt + phi
+     else if (pathName == pfMetPt_.pathName)
+       {
+         for (const auto & key : keys)
+     {
+       pfMetPt_.ME->Fill(objects[key].pt());
+       pfMetPhi_.ME->Fill(objects[key].phi());
+     }
+       }
 
-	   //muon dxy(use an unique path)
-	   else if (pathName == muonDxy_.pathName)
-	     {
-	       edm::Handle<vector<reco::RecoChargedCandidate>> recoChargedCands;
-	       iEvent.getByToken(chargedCandToken_, recoChargedCands);
-	       edm::Handle<reco::BeamSpot> recoBeamSpot;
-	       iEvent.getByToken(beamSpotToken_, recoBeamSpot);
-	       double muon_dxy;
+     // bjet eta + phi
+     else if (pathName == bJetEta_.pathName || pathName == bJetEta_.pathNameOR)
+       {
+         for (const auto & key : keys)
+     {
+       bJetEta_.ME->Fill(objects[key].eta());
+       bJetPhi_.ME->Fill(objects[key].phi());
+     }
+       }
 
-	       if (recoChargedCands.isValid() && recoBeamSpot.isValid())
-		 {
-		   for (const auto & key : keys)
-		     {
-		       muon_dxy = dxyFinder(objects[key].eta(), objects[key].phi(), recoChargedCands, recoBeamSpot);
-		       if (muon_dxy != -99.) muonDxy_.ME->Fill(muon_dxy);
-		     }
-		 }
-	     }
+     //b-tagging CSV information
+     if (pathName == bJetCSVPF_.pathName)
+       {
+         edm::Handle<reco::JetTagCollection> csvPfTags;
+         iEvent.getByToken(csvPfTagsToken_, csvPfTags);
+         edm::Handle<vector<reco::PFJet>> csvPfJets;
+         iEvent.getByToken(csvPfJetsToken_, csvPfJets);
 
-	   // ////////////////////////////////
-	   // ///
-	   // /// double-object plots
-	   // ///
-	   // ////////////////////////////////
+         if (csvPfTags.isValid() && csvPfJets.isValid())
+     {
+       for (auto iter = csvPfTags->begin(); iter != csvPfTags->end(); iter++) bJetCSVPF_.ME->Fill(iter->second);
+     }
+       }
+     if (pathName == bJetCSVCalo_.pathName)
+       {
+         edm::Handle<reco::JetTagCollection> csvCaloTags;
+         iEvent.getByToken(csvCaloTagsToken_, csvCaloTags);
+         edm::Handle<vector<reco::CaloJet>> csvCaloJets;
+         iEvent.getByToken(csvCaloJetsToken_, csvCaloJets);
 
-	   //double muon low mass
-	   else if (pathName == diMuonLowMass_.pathName)
-	     {
-	       const double mu_mass(.105658);
-	       unsigned int kCnt0 = 0;
-	       for (const auto & key0: keys)
-		 {
-		   unsigned int kCnt1 = 0;
-		   for (const auto & key1: keys)
-		     {
-		       if (key0 != key1 && kCnt1 > kCnt0) // avoid filling hists with same objs && avoid double counting separate objs
-			 {
-			   if (abs(objects[key0].id()) == 13 && (objects[key0].id()+objects[key1].id()==0))  // check muon id and dimuon charge
-			     {
-			       TLorentzVector mu1, mu2, dimu;
-			       mu1.SetPtEtaPhiM(objects[key0].pt(), objects[key0].eta(), objects[key0].phi(), mu_mass);
-			       mu2.SetPtEtaPhiM(objects[key1].pt(), objects[key1].eta(), objects[key1].phi(), mu_mass);
-			       dimu = mu1+mu2;
-			       diMuonLowMass_.ME->Fill(dimu.M());
-			     }
-			 }
-		       kCnt1 +=1;
-		     }
-		   kCnt0 +=1;
-		 }
-	     } //end double object plot
+         if (csvCaloTags.isValid() && csvCaloJets.isValid())
+     {
+       for (auto iter = csvCaloTags->begin(); iter != csvCaloTags->end(); iter++) bJetCSVCalo_.ME->Fill(iter->second);
+     }
+       }
 
-	   else if (pathName == diMuonMass_.pathName || pathName == diMuonMass_.pathNameOR)
-	     {
-	       const double mu_mass(.105658);
-	       unsigned int kCnt0 = 0;
-	       for (const auto & key0: keys)
-		 {
-		   unsigned int kCnt1 = 0;
-		   for (const auto & key1: keys)
-		     {
-		       if (key0 != key1 && kCnt1 > kCnt0) // avoid filling hists with same objs && avoid double counting separate objs
-			 {
-			   if (abs(objects[key0].id()) == 13 && (objects[key0].id()+objects[key1].id()==0))  // check muon id and dimuon charge
-			     {
-			       TLorentzVector mu1, mu2, dimu;
-			       mu1.SetPtEtaPhiM(objects[key0].pt(), objects[key0].eta(), objects[key0].phi(), mu_mass);
-			       mu2.SetPtEtaPhiM(objects[key1].pt(), objects[key1].eta(), objects[key1].phi(), mu_mass);
-			       dimu = mu1+mu2;
-			       diMuonMass_.ME->Fill(dimu.M());
-			     }
-			 }
-		       kCnt1 +=1;
-		     }
-		   kCnt0 +=1;
-		 }
-	     }
+     //muon dxy(use an unique path)
+     else if (pathName == muonDxy_.pathName)
+       {
+         edm::Handle<vector<reco::RecoChargedCandidate>> recoChargedCands;
+         iEvent.getByToken(chargedCandToken_, recoChargedCands);
+         edm::Handle<reco::BeamSpot> recoBeamSpot;
+         iEvent.getByToken(beamSpotToken_, recoBeamSpot);
+         double muon_dxy;
 
-	   else if (pathName == diElecMass_.pathName)
-	     {
-	       unsigned int kCnt0 = 0;
-	       for (const auto & key0: keys)
-		 {
-		   unsigned int kCnt1 = 0;
-		   for (const auto & key1: keys)
-		     {
-		       if (key0 != key1 && kCnt1 > kCnt0) // avoid filling hists with same objs && avoid double counting separate objs
-			 {
-			   //                   if (abs(objects[key0].id()) == 11 && (objects[key0].id()+objects[key1].id()==0))  // id is not filled for electrons
-			   //                     {
-			   TLorentzVector el1, el2, diEl;
-			   el1.SetPtEtaPhiM(objects[key0].pt(), objects[key0].eta(), objects[key0].phi(), 0);
-			   el2.SetPtEtaPhiM(objects[key1].pt(), objects[key1].eta(), objects[key1].phi(), 0);
-			   diEl = el1+el2;
-			   diElecMass_.ME->Fill(diEl.M());
-			   //                     }
-			 }
-		       kCnt1 +=1;
-		     }
-		   kCnt0 +=1;
-		 }
-	     } //end double object plot
+         if (recoChargedCands.isValid() && recoBeamSpot.isValid())
+     {
+       for (const auto & key : keys)
+         {
+           muon_dxy = dxyFinder(objects[key].eta(), objects[key].phi(), recoChargedCands, recoBeamSpot);
+           if (muon_dxy != -99.) muonDxy_.ME->Fill(muon_dxy);
+         }
+     }
+       }
 
-	   firedMap[pathName] = true;
-	 } //end if trigger accept
+     // ////////////////////////////////
+     // ///
+     // /// double-object plots
+     // ///
+     // ////////////////////////////////
+
+     //double muon low mass
+     else if (pathName == diMuonLowMass_.pathName)
+       {
+         const double mu_mass(.105658);
+         unsigned int kCnt0 = 0;
+         for (const auto & key0: keys)
+     {
+       unsigned int kCnt1 = 0;
+       for (const auto & key1: keys)
+         {
+           if (key0 != key1 && kCnt1 > kCnt0) // avoid filling hists with same objs && avoid double counting separate objs
+       {
+         if (abs(objects[key0].id()) == 13 && (objects[key0].id()+objects[key1].id()==0))  // check muon id and dimuon charge
+           {
+             TLorentzVector mu1, mu2, dimu;
+             mu1.SetPtEtaPhiM(objects[key0].pt(), objects[key0].eta(), objects[key0].phi(), mu_mass);
+             mu2.SetPtEtaPhiM(objects[key1].pt(), objects[key1].eta(), objects[key1].phi(), mu_mass);
+             dimu = mu1+mu2;
+             diMuonLowMass_.ME->Fill(dimu.M());
+           }
+       }
+           kCnt1 +=1;
+         }
+       kCnt0 +=1;
+     }
+       } //end double object plot
+
+     else if (pathName == diMuonMass_.pathName || pathName == diMuonMass_.pathNameOR)
+       {
+         const double mu_mass(.105658);
+         unsigned int kCnt0 = 0;
+         for (const auto & key0: keys)
+     {
+       unsigned int kCnt1 = 0;
+       for (const auto & key1: keys)
+         {
+           if (key0 != key1 && kCnt1 > kCnt0) // avoid filling hists with same objs && avoid double counting separate objs
+       {
+         if (abs(objects[key0].id()) == 13 && (objects[key0].id()+objects[key1].id()==0))  // check muon id and dimuon charge
+           {
+             TLorentzVector mu1, mu2, dimu;
+             mu1.SetPtEtaPhiM(objects[key0].pt(), objects[key0].eta(), objects[key0].phi(), mu_mass);
+             mu2.SetPtEtaPhiM(objects[key1].pt(), objects[key1].eta(), objects[key1].phi(), mu_mass);
+             dimu = mu1+mu2;
+             diMuonMass_.ME->Fill(dimu.M());
+           }
+       }
+           kCnt1 +=1;
+         }
+       kCnt0 +=1;
+     }
+       }
+
+     else if (pathName == pAL1DoubleMuZMass_.pathName)
+       {
+         const double mu_mass(.105658);
+         unsigned int kCnt0 = 0;
+         for (const auto & key0: keys)
+     {
+       unsigned int kCnt1 = 0;
+       for (const auto & key1: keys)
+         {
+           if (key0 != key1 && kCnt1 > kCnt0) // avoid filling hists with same objs && avoid double counting separate objs
+       {
+                           // if (abs(objects[key0].id()) == 13 && (objects[key0].id()+objects[key1].id()==0))  // id is not filled for l1 stage2 muons
+         //  {
+                           TLorentzVector mu1, mu2, dimu;
+                           mu1.SetPtEtaPhiM(objects[key0].pt(), objects[key0].eta(), objects[key0].phi(), mu_mass);
+                           mu2.SetPtEtaPhiM(objects[key1].pt(), objects[key1].eta(), objects[key1].phi(), mu_mass);
+                           dimu = mu1+mu2;
+                           pAL1DoubleMuZMass_.ME->Fill(dimu.M());
+                           //  }
+       }
+           kCnt1 +=1;
+         }
+       kCnt0 +=1;
+     }
+       }
+
+     else if (pathName == pAL2DoubleMuZMass_.pathName)
+       {
+         const double mu_mass(.105658);
+         unsigned int kCnt0 = 0;
+         for (const auto & key0: keys)
+     {
+       unsigned int kCnt1 = 0;
+       for (const auto & key1: keys)
+         {
+           if (key0 != key1 && kCnt1 > kCnt0) // avoid filling hists with same objs && avoid double counting separate objs
+       {
+         if (abs(objects[key0].id()) == 13 && (objects[key0].id()+objects[key1].id()==0))  // check muon id and dimuon charge
+           {
+             TLorentzVector mu1, mu2, dimu;
+             mu1.SetPtEtaPhiM(objects[key0].pt(), objects[key0].eta(), objects[key0].phi(), mu_mass);
+             mu2.SetPtEtaPhiM(objects[key1].pt(), objects[key1].eta(), objects[key1].phi(), mu_mass);
+             dimu = mu1+mu2;
+             pAL2DoubleMuZMass_.ME->Fill(dimu.M());
+           }
+       }
+           kCnt1 +=1;
+         }
+       kCnt0 +=1;
+     }
+       }
+
+     else if (pathName == pAL3DoubleMuZMass_.pathName)
+       {
+         const double mu_mass(.105658);
+         unsigned int kCnt0 = 0;
+         for (const auto & key0: keys)
+     {
+       unsigned int kCnt1 = 0;
+       for (const auto & key1: keys)
+         {
+           if (key0 != key1 && kCnt1 > kCnt0) // avoid filling hists with same objs && avoid double counting separate objs
+       {
+         if (abs(objects[key0].id()) == 13 && (objects[key0].id()+objects[key1].id()==0))  // check muon id and dimuon charge
+           {
+             TLorentzVector mu1, mu2, dimu;
+             mu1.SetPtEtaPhiM(objects[key0].pt(), objects[key0].eta(), objects[key0].phi(), mu_mass);
+             mu2.SetPtEtaPhiM(objects[key1].pt(), objects[key1].eta(), objects[key1].phi(), mu_mass);
+             dimu = mu1+mu2;
+             pAL3DoubleMuZMass_.ME->Fill(dimu.M());
+           }
+       }
+           kCnt1 +=1;
+         }
+       kCnt0 +=1;
+     }
+       }
+
+     else if (pathName == diElecMass_.pathName)
+       {
+         unsigned int kCnt0 = 0;
+         for (const auto & key0: keys)
+     {
+       unsigned int kCnt1 = 0;
+       for (const auto & key1: keys)
+         {
+           if (key0 != key1 && kCnt1 > kCnt0) // avoid filling hists with same objs && avoid double counting separate objs
+       {
+         //                   if (abs(objects[key0].id()) == 11 && (objects[key0].id()+objects[key1].id()==0))  // id is not filled for electrons
+         //                     {
+         TLorentzVector el1, el2, diEl;
+         el1.SetPtEtaPhiM(objects[key0].pt(), objects[key0].eta(), objects[key0].phi(), 0);
+         el2.SetPtEtaPhiM(objects[key1].pt(), objects[key1].eta(), objects[key1].phi(), 0);
+         diEl = el1+el2;
+         diElecMass_.ME->Fill(diEl.M());
+         //                     }
+       }
+           kCnt1 +=1;
+         }
+       kCnt0 +=1;
+     }
+       } //end double object plot
+
+     firedMap[pathName] = true;
+   } //end if trigger accept
      } //end loop over plots/paths
 
    //   sleep(1); //sleep for 1s, used to calibrate timing
@@ -715,7 +804,7 @@ HLTObjectMonitor::dqmBeginRun(edm::Run const& iRun, edm::EventSetup const& iSetu
       if (debugPrint) std::cout << "Extracting HLTconfig. " << std::endl;
     }
 
-  //get path indicies from menu 
+  //get path indicies from menu
   string pathName_noVersion;
   vector<string> triggerPaths = hltConfig_.triggerNames();
 
@@ -723,26 +812,26 @@ HLTObjectMonitor::dqmBeginRun(edm::Run const& iRun, edm::EventSetup const& iSetu
     {
       pathName_noVersion = hltConfig_.removeVersion(pathName);
       for (auto plot : plotList)
-  	{	
-  	  if (plot->pathName == pathName_noVersion)
-  	    {
-  	      (*plot).pathIndex = hltConfig_.triggerIndex(pathName);
-  	    }
-  	  else if (plot->pathNameOR == pathName_noVersion)
-  	    {
-	      (*plot).pathIndexOR = hltConfig_.triggerIndex(pathName);
-  	    }
-  	}
+    {
+      if (plot->pathName == pathName_noVersion)
+        {
+          (*plot).pathIndex = hltConfig_.triggerIndex(pathName);
+        }
+      else if (plot->pathNameOR == pathName_noVersion)
+        {
+        (*plot).pathIndexOR = hltConfig_.triggerIndex(pathName);
+        }
+    }
     }
   vector<hltPlot*> plotList_temp;
   for (auto plot : plotList)
     {
       if (plot->pathIndex > 0 || plot->pathIndexOR > 0)
-	{
-	  plotList_temp.push_back(plot);
-	  acceptMap[plot->pathName] = false;
-	  if (plot->pathIndexOR > 0) acceptMap[plot->pathNameOR] = false;
-	}
+  {
+    plotList_temp.push_back(plot);
+    acceptMap[plot->pathName] = false;
+    if (plot->pathIndexOR > 0) acceptMap[plot->pathNameOR] = false;
+  }
     }
   //now re-assign plotList to contain only the plots with paths in the menu.
   plotList = plotList_temp;
@@ -766,7 +855,7 @@ void HLTObjectMonitor::bookHistograms(DQMStore::IBooker & ibooker, edm::Run cons
   /// Main shifter workspace plots
   ///
   ////////////////////////////////
-  
+
   //book wall time separately
   ibooker.setCurrentFolder(mainShifterFolder);
   wallTime_.ME = ibooker.book1D(wallTime_.plotLabel,wallTime_.pathName,wallTime_.nBins,wallTime_.xMin,wallTime_.xMax);
@@ -778,18 +867,18 @@ void HLTObjectMonitor::bookHistograms(DQMStore::IBooker & ibooker, edm::Run cons
       if (!plot->pathNameOR.empty()) display_pathNames = plot->pathName + " OR " + plot->pathNameOR;
 
       if (plot->displayInPrimary)
-	{
-	  ibooker.setCurrentFolder(mainShifterFolder);
-	  (*plot).ME = ibooker.book1D(plot->plotLabel,display_pathNames.c_str(),plot->nBins,plot->xMin,plot->xMax);
-	  (*plot).ME->setAxisTitle(plot->xAxisLabel);
-	  //need to add OR statement
-	}
+  {
+    ibooker.setCurrentFolder(mainShifterFolder);
+    (*plot).ME = ibooker.book1D(plot->plotLabel,display_pathNames.c_str(),plot->nBins,plot->xMin,plot->xMax);
+    (*plot).ME->setAxisTitle(plot->xAxisLabel);
+    //need to add OR statement
+  }
       else
-	{
-	  ibooker.setCurrentFolder(backupFolder);
-	  (*plot).ME = ibooker.book1D(plot->plotLabel,display_pathNames.c_str(),plot->nBins,plot->xMin,plot->xMax);
-	  (*plot).ME->setAxisTitle(plot->xAxisLabel);
-	}
+  {
+    ibooker.setCurrentFolder(backupFolder);
+    (*plot).ME = ibooker.book1D(plot->plotLabel,display_pathNames.c_str(),plot->nBins,plot->xMin,plot->xMax);
+    (*plot).ME->setAxisTitle(plot->xAxisLabel);
+  }
     }
 
 }
@@ -843,3 +932,4 @@ HLTObjectMonitor::endLuminosityBlock(edm::LuminosityBlock const&, edm::EventSetu
 
 //define this as a plug-in
 DEFINE_FWK_MODULE(HLTObjectMonitor);
+
