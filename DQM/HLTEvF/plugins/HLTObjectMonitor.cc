@@ -698,7 +698,7 @@ HLTObjectMonitor::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
                            mu1.SetPtEtaPhiM(objects[key0].pt(), objects[key0].eta(), objects[key0].phi(), mu_mass);
                            mu2.SetPtEtaPhiM(objects[key1].pt(), objects[key1].eta(), objects[key1].phi(), mu_mass);
                            dimu = mu1+mu2;
-                           pAL1DoubleMuZMass_.ME->Fill(dimu.M());
+                           if(dimu.M()>pAL1DoubleMuZMass_.xMin && dimu.M()<pAL1DoubleMuZMass_.xMax) pAL1DoubleMuZMass_.ME->Fill(dimu.M());
                            //  }
 			 }
 		       kCnt1 +=1;
@@ -724,7 +724,7 @@ HLTObjectMonitor::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
 			       mu1.SetPtEtaPhiM(objects[key0].pt(), objects[key0].eta(), objects[key0].phi(), mu_mass);
 			       mu2.SetPtEtaPhiM(objects[key1].pt(), objects[key1].eta(), objects[key1].phi(), mu_mass);
 			       dimu = mu1+mu2;
-			       pAL2DoubleMuZMass_.ME->Fill(dimu.M());
+			       if(dimu.M()>pAL2DoubleMuZMass_.xMin && dimu.M()<pAL2DoubleMuZMass_.xMax) pAL2DoubleMuZMass_.ME->Fill(dimu.M());
 			     }
 			 }
 		       kCnt1 +=1;
@@ -750,7 +750,7 @@ HLTObjectMonitor::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
 			       mu1.SetPtEtaPhiM(objects[key0].pt(), objects[key0].eta(), objects[key0].phi(), mu_mass);
 			       mu2.SetPtEtaPhiM(objects[key1].pt(), objects[key1].eta(), objects[key1].phi(), mu_mass);
 			       dimu = mu1+mu2;
-			       pAL3DoubleMuZMass_.ME->Fill(dimu.M());
+			       if(dimu.M()>pAL3DoubleMuZMass_.xMin && dimu.M()<pAL3DoubleMuZMass_.xMax) pAL3DoubleMuZMass_.ME->Fill(dimu.M());
 			     }
 			 }
 		       kCnt1 +=1;
@@ -813,7 +813,7 @@ HLTObjectMonitor::dqmBeginRun(edm::Run const& iRun, edm::EventSetup const& iSetu
     {
       pathName_noVersion = hltConfig_.removeVersion(pathName);
       for (auto plot : plotList)
-  	{
+  	{	
   	  if (plot->pathName == pathName_noVersion)
   	    {
   	      (*plot).pathIndex = hltConfig_.triggerIndex(pathName);
