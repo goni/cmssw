@@ -414,6 +414,16 @@ hltObjectMonitor = cms.EDAnalyzer('HLTObjectMonitor',
         Xmin = cms.double(60.0),
         Xmax = cms.double(160.0)
         ),
+    pAHIL3DoubleMuZMass = cms.PSet(
+        pathName = cms.string("HLT_PAL3DoubleMu10_HIon"),
+        moduleName = cms.string("hltHIL3fL2DimuonMu10L3Filtered10"),
+        plotLabel = cms.string("PAHIL3DoubleMu10_ZMass"),
+        axisLabel = cms.string("dimuon mass [GeV]"),
+        mainWorkspace = cms.bool(True),
+        NbinsX = cms.int32(50),
+        Xmin = cms.double(60.0),
+        Xmax = cms.double(160.0)
+        ),
     diElecMass = cms.PSet(
         pathName = cms.string("HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ"),
         moduleName = cms.string("hltEle23Ele12CaloIdLTrackIdLIsoVLDZFilter"),
