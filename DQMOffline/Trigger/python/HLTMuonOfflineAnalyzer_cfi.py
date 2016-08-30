@@ -42,20 +42,33 @@ hltMuonOfflineAnalyzer = cms.EDAnalyzer("HLTMuonOfflineAnalyzer",
       "HLT_IsoTkMu18_v",
       "HLT_L1SingleMu18_v",
       "HLT_L2Mu10_v",
-      "HLT_HIL1DoubleMu0", #for HI
-      "HLT_HIL1DoubleMu0BPTX", #for HI
-      "HLT_HIL2Mu3", #for HI
-      "HLT_HIL2Mu3BPTX", #for HI
-      "HLT_HIL2Mu7", #for HI
-      "HLT_HIL2Mu15", #for HI
-      "HLT_HIL2Mu3_NHitQ", #for HI
-      "HLT_HIL2DoubleMu0", #for HI
-      "HLT_HIL2DoubleMu0BPTX", #for HI
-      "HLT_HIL2DoubleMu0_NHitQ", #for HI
-      "HLT_HIL2DoubleMu3", #for HI
-      "HLT_HIL3Mu3", #for HI
-      "HLT_HIL3Mu3BPTX", #for HI
-      "HLT_HIL3DoubleMuOpen" #for HI
+      "HLT_PAL1DoubleMu0_MassGT1_v1", #for HI
+      "HLT_PAL1DoubleMuOpen_MassGT1_v1", #for HI
+      "HLT_PAL1DoubleMuOpen_OS_v1", #for HI
+      "HLT_PAL1DoubleMuOpen_SS_v1", #for HI
+      "HLT_PAL1DoubleMuOpen_v1", #for HI
+      "HLT_PAL1DoubleMu0_v1", #for HI
+      "HLT_PAL1DoubleMu0_HighQ_v1", #for HI
+      "HLT_PAL1DoubleMu0_HighQ_v1", #for HI
+      "HLT_PAL1DoubleMu10_v1", #for HI
+      "HLT_PAL2DoubleMuOpen_v1", #for HI
+      "HLT_PAL2DoubleMu10_v1", #for HI
+      "HLT_PAL3DoubleMuOpen_v1", #for HI
+      "HLT_PAL3DoubleMuOpen_HIon_v1", #for HI
+      "HLT_PAL3DoubleMu10_v1", #for HI
+      "HLT_PAL3DoubleMu10_HIon_v1", #for HI
+      "HLT_PAL1Mu12_v1", #for HI
+      "HLT_PAL1Mu15_v1", #for HI
+      "HLT_PAL2Mu12_v1", #for HI
+      "HLT_PAL2Mu15_v1", #for HI
+      "HLT_PAL3Mu3_v1", #for HI
+      "HLT_PAL3Mu5_v1", #for HI
+      "HLT_PAL3Mu7_v1", #for HI
+      "HLT_PAL3Mu3_v1", #for HI
+      "HLT_PAL3Mu5_v1", #for HI
+      "HLT_PAL3Mu7_v1", #for HI
+      "HLT_PAL3Mu12_v1", #for HI
+      "HLT_PAL3Mu15_v1", #for HI
     ),
 
 #HLT_Mu15_eta2p1_TriCentral_40_20_20_BTagIP3D1stTrack_v3 matches HLT_Mu15_eta2p1_v
