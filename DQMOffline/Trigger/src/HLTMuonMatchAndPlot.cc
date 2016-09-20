@@ -308,7 +308,7 @@ void HLTMuonMatchAndPlot::analyze(Handle<MuonCollection>   & allMuons,
       if (muon.charge() != theProbe.charge() && !pairalreadyconsidered) {
         double mass = (muon.p4() + theProbe.p4()).M();
         if(mass > 60 && mass < 120) {
-          if(muon.pt() < ptCut_Z) continue;
+          if(muon.pt() < probeptCutZ_) continue;
           hists_["massVsEtaZ_denom"]->Fill(theProbe.eta());
           hists_["massVsPtZ_denom"]->Fill(theProbe.pt());
           hists_["massVsVertexZ_denom"]->Fill(vertices->size());
@@ -320,7 +320,7 @@ void HLTMuonMatchAndPlot::analyze(Handle<MuonCollection>   & allMuons,
           pairalreadyconsidered = true;
         }
         if(mass > 1 && mass < 4) {
-          if(muon.pt() < ptCut_Jpsi) continue;
+          if(muon.pt() < probeptCutJpsi_) continue;
           hists_["massVsEtaJpsi_denom"]->Fill(theProbe.eta());
           hists_["massVsPtJpsi_denom"]->Fill(theProbe.pt());
           hists_["massVsVertexJpsi_denom"]->Fill(vertices->size());
