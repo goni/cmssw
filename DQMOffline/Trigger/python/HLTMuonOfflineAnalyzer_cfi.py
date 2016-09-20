@@ -124,7 +124,7 @@ hltMuonOfflineAnalyzer = cms.EDAnalyzer("HLTMuonOfflineAnalyzer",
         ## reco muons, taken with respect to the beamspot
         d0Cut = cms.untracked.double(2.0),
         z0Cut = cms.untracked.double(25.0),
-        ## pt cut value for Z, Jpsi mass region
+        ## Default pt cut value for Z, Jpsi mass region
         ptCut_Z = cms.untracked.double(20.0),
         ptCut_Jpsi = cms.untracked.double(20.0),
         ## cuts
