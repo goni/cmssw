@@ -5,8 +5,6 @@ from DQMOffline.Trigger.HLTMuonOfflineAnalyzer_cfi import hltMuonOfflineAnalyzer
 globalMuonParams = cms.PSet(
     d0Cut = cms.untracked.double(2.0),
     z0Cut = cms.untracked.double(25.0),
-    ptCut_Z = cms.untracked.double(20.0),
-    ptCut_Jpsi = cms.untracked.double(6.0),
     recoCuts = cms.untracked.string("isGlobalMuon && abs(eta) < 2.4"),
     hltCuts  = cms.untracked.string("abs(eta) < 2.4"),
 )
