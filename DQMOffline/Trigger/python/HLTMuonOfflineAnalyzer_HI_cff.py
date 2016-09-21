@@ -49,21 +49,25 @@ looseMuonParams = cms.PSet(
 globalAnalyzer = hltMuonOfflineAnalyzer.clone()
 globalAnalyzer.destination = "HLT/Muon/DistributionsGlobal"
 globalAnalyzer.targetParams = globalMuonParams
+globalAnalyzer.probeParams.ptCut_Jpsi = cms.untracked.double(6.0)
 #globalAnalyzer.probeParams = cms.PSet()
 
 trackerAnalyzer = hltMuonOfflineAnalyzer.clone()
 trackerAnalyzer.destination = "HLT/Muon/DistributionsTracker"
 trackerAnalyzer.targetParams = trackerMuonParams
+trackerAnalyzer.probeParams.ptCut_Jpsi = cms.untracked.double(6.0)
 #trackerAnalyzer.probeParams = cms.PSet()
 
 tightAnalyzer = hltMuonOfflineAnalyzer.clone()
 tightAnalyzer.destination = "HLT/Muon/DistributionsTight"
 tightAnalyzer.targetParams = tightMuonParams
+tightAnalyzer.probeParams.ptCut_Jpsi = cms.untracked.double(6.0)
 #tightAnalyzer.probeParams = cms.PSet() 
 
 looseAnalyzer = hltMuonOfflineAnalyzer.clone()
 looseAnalyzer.destination = "HLT/Muon/DistributionsLoose"
 looseAnalyzer.targetParams = looseMuonParams
+looseAnalyzer.probeParams.ptCut_Jpsi = cms.untracked.double(6.0)
 #tightAnalyzer.probeParams = cms.PSet() 
 
 
