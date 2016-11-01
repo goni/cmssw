@@ -66,7 +66,16 @@ looseAnalyzer.destination = "HLT/Muon/DistributionsLoose"
 looseAnalyzer.targetParams = looseMuonParams
 #tightAnalyzer.probeParams = cms.PSet() 
 
-
+from Configuration.StandardSequences.Eras import eras
+for e in [eras.pA_2016]:
+  e.toModify(globalAnalyzer.targetParams, ptCut_Jpsi = cms.untracked.double( 5.0))
+  e.toModify(globalAnalyzer.binParams, ptCoarse = cms.untracked.vdouble(  0.,1.,2.,3.,4.,5.,7.,9.,12.,15.,20.,30.,40.))
+  e.toModify(trackerAnalyzer.targetParams, ptCut_Jpsi = cms.untracked.double(5.0))
+  e.toModify(trackerAnalyzer.binParams, ptCoarse = cms.untracked.vdouble( 0.,1.,2.,3.,4.,5.,7.,9.,12.,15.,20.,30.,40.))
+  e.toModify(tightAnalyzer.targetParams, ptCut_Jpsi = cms.untracked.double(  5.0))
+  e.toModify(tightAnalyzer.binParams, ptCoarse = cms.untracked.vdouble(   0.,1.,2.,3.,4.,5.,7.,9.,12.,15.,20.,30.,40.))
+  e.toModify(looseAnalyzer.targetParams, ptCut_Jpsi = cms.untracked.double(  5.0))
+  e.toModify(looseAnalyzer.binParams, ptCoarse = cms.untracked.vdouble(   0.,1.,2.,3.,4.,5.,7.,9.,12.,15.,20.,30.,40.))
 
 hltMuonOfflineAnalyzers = cms.Sequence(
     globalAnalyzer *
