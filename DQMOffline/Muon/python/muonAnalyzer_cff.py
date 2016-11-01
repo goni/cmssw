@@ -23,6 +23,19 @@ muonAnalyzer = cms.Sequence(muonEnergyDepositAnalyzer*
                             muonPFsequence*
                             muonRecoOneHLT)
 
+
+muonAnalyzer_noHLT = cms.Sequence(muonEnergyDepositAnalyzer*
+                                  muonSeedsAnalyzer*
+                                  muonRecoAnalyzer*
+                                  glbMuonSegmentAnalyzer*
+                                  staMuonSegmentAnalyzer*
+                                  muonKinVsEtaAnalyzer*
+                                  diMuonHistos*
+                                  LooseMuonEfficiencyAnalyzer*
+                                  MediumMuonEfficiencyAnalyzer*
+                                  TightMuonEfficiencyAnalyzer*                                
+                                  muonPFsequence)
+
 from Configuration.StandardSequences.Eras import eras
 for e in [eras.pA_2016]:
   e.toModify(diMuonHistos, etaBin = cms.int32(175))
@@ -36,14 +49,3 @@ for e in [eras.pA_2016]:
   e.toModify(diMuonHistos, HighMassMin = cms.double(55.0))
   e.toModify(diMuonHistos, HighMassMax = cms.double(125.0))
 
-muonAnalyzer_noHLT = cms.Sequence(muonEnergyDepositAnalyzer*
-                                  muonSeedsAnalyzer*
-                                  muonRecoAnalyzer*
-                                  glbMuonSegmentAnalyzer*
-                                  staMuonSegmentAnalyzer*
-                                  muonKinVsEtaAnalyzer*
-                                  diMuonHistos*
-                                  LooseMuonEfficiencyAnalyzer*
-                                  MediumMuonEfficiencyAnalyzer*
-                                  TightMuonEfficiencyAnalyzer*                                
-                                  muonPFsequence)
