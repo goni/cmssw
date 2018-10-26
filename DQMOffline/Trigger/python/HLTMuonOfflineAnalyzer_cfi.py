@@ -48,36 +48,6 @@ hltMuonOfflineAnalyzer = DQMEDAnalyzer('HLTMuonOfflineAnalyzer',
       "HLT_OldMu100_v",
       "HLT_TkMu100_v",
       "HLT_DoubleL2Mu50_v",
-      "HLT_HIL1Mu12_v", # for HI
-      "HLT_HIL1Mu16_v", # for HI
-      "HLT_HIL2Mu3_NHitQ10_v", # for HI
-      "HLT_HIL2Mu5_NHitQ10_v", # for HI
-      "HLT_HIL2Mu7_v", # for HI
-      "HLT_HIL2Mu12_v", # for HI
-      "HLT_HIL2Mu15_v", # for HI
-      "HLT_HIL2Mu20_v", # for HI
-      "HLT_HIL3Mu3_v", # for HI
-      "HLT_HIL3Mu3_NHitQ10_v", # for HI
-      "HLT_HIL3Mu5_v", # for HI
-      "HLT_HIL3Mu5_NHitQ10_v", # for HI
-      "HLT_HIL3Mu7_v", # for HI
-      "HLT_HIL3Mu12_v", # for HI
-      "HLT_HIL3Mu15_v", # for HI
-      "HLT_HIL3Mu20_v", # for HI
-      "HLT_HIL3Mu3_Track1_Jpsi_v", # for HI
-      "HLT_HIL3Mu5_Track1_Jpsi_v", # for HI
-      "HLT_HIL3Mu3_Track1_v", # for HI
-      "HLT_HIL3Mu5_Track1_v", # for HI
-      "HLT_HIL1DoubleMuOpen_v", # for HI
-      "HLT_HIL1DoubleMuOpen_OS_v", # for HI
-      "HLT_HIL1DoubleMuOpen_SS_v", # for HI
-      "HLT_HIL1DoubleMu0_v", # for HI
-      "HLT_HIL1DoubleMu0_HighQ_v", # for HI
-      "HLT_HIL1DoubleMu10_v", # for HI
-      "HLT_HIL2DoubleMu0_v", # for HI
-      "HLT_HIL2DoubleMu10_v", # for HI
-      "HLT_HIL3DoubleMu0_v", # for HI
-      "HLT_HIL3DoubleMu10_v", # for HI
       "HLT_HIL1DoubleMuOpen_v1",
       "HLT_HIL1DoubleMuOpen_Centrality_30_100_v1",
       "HLT_HIL1DoubleMuOpen_OS_Centrality_30_100_v1",
